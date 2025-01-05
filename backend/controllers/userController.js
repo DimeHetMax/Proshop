@@ -168,7 +168,7 @@ const getUserById = asyncHandler(async (req, res) => {
 // @access   Privat/Admin
 const deleteUser = asyncHandler(async (req, res) => {
     const userId = req.params.id
-    console.log("userId===>", userId);
+    // console.log("userId===>", userId);
     const admin = await User.findById(req.user._id)
     if (!admin) {
         res.status(404)
