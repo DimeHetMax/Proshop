@@ -34,13 +34,18 @@ export const ordersApiSLice = apiSlice.injectEndpoints({
             query: () => ({
                 url: `${ORDERS_URL}/mine`
             }),
-            keepUnusedDataFor: 5
+            keepUnusedDataFor: 5,
+            providesTags: ["Orders"]
         }),
         getOrders: builder.query({
-            query: () => ({
-                url: ORDERS_URL
+            query: ({ pageNumber }) => ({
+                url: ORDERS_URL,
+                params: {
+                    pageNumber
+                }
             }),
             keepUnusedDataFor: 5,
+            providesTags: ["Orders"]
         }),
         deliverOrder: builder.mutation({
             query: (orderId) => ({
@@ -48,6 +53,13 @@ export const ordersApiSLice = apiSlice.injectEndpoints({
                 method: "PUT",
 
             })
+        }),
+        deleteOrder: builder.mutation({
+            query: (orderId) => ({
+                url: `${ORDERS_URL}/${orderId}`,
+                method: "DELETE"
+            }),
+            invalidatesTags: ["Orders"]
         })
     })
 });
@@ -61,5 +73,6 @@ export const {
     useGetPayPalClintIdQuery,
     useGetMyOrdersQuery,
     useGetOrdersQuery,
-    useDeliverOrderMutation
+    useDeliverOrderMutation,
+    useDeleteOrderMutation
 } = ordersApiSLice;

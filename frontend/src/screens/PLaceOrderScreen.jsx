@@ -14,6 +14,9 @@ const PlaceOrderScreen = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const cart = useSelector(state => state.cart)
+    const { userInfo } = useSelector(state => state.auth)
+    console.log("userInfo in PlaceOrderScreen ===>", userInfo);
+
     const [createOrder, { isLoading, error }] = useCreateOrderMutation()
 
     useEffect(() => {
@@ -26,6 +29,12 @@ const PlaceOrderScreen = () => {
 
 
     const placeOrderHandler = async () => {
+        if (userInfo.isAdmin) {
+            window.alert(`${userInfo.name.toUpperCase()}: Are you sure you wanna place an order? You are isAdmin: ${userInfo.isAdmin}!`)
+            if (!window.confirm("Please confirm!")) {
+                return window.alert("Stop fucking around!")
+            }
+        }
         try {
             const res = await createOrder({
                 orderItems: cart.cartItems,

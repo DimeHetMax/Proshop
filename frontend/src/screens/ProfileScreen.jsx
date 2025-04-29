@@ -3,12 +3,12 @@ import { Table, Form, Button, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaTrash } from "react-icons/fa";
 
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { useProfileMutation } from "../slices/usersApiSlice";
-import { useGetMyOrdersQuery } from "../slices/ordersApiSlice";
+import { useGetMyOrdersQuery, useDeleteOrderMutation } from "../slices/ordersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 
 
@@ -22,8 +22,9 @@ const ProfileScreen = () => {
     const { userInfo } = useSelector(state => state.auth)
 
     const [updateProfile, { isLoading: loadingUpdateProfile }] = useProfileMutation()
-    const { data: orders, isLoading, error } = useGetMyOrdersQuery();
-    console.log("orders====>", orders);
+    const [deleteOrder] = useDeleteOrderMutation()
+    const { data: orders, isLoading, error, refetch } = useGetMyOrdersQuery();
+    // console.log("orders====>", orders);
     useEffect(
         () => {
             if (userInfo) {
@@ -44,6 +45,19 @@ const ProfileScreen = () => {
             const res = await updateProfile({ _id: userInfo._id, name, email, password }).unwrap()
             dispatch(setCredentials(res))
             toast.success("User Updated")
+        } catch (error) {
+            toast.error(error?.data?.message || error.error)
+        }
+    }
+    const onDeleteHandler = async (id) => {
+        if (!window.confirm("Are you sure you want to delete it?")) {
+            return
+        }
+        try {
+            await deleteOrder(id).unwrap()
+
+            toast.success(`${id} was deleted`)
+            refetch()
         } catch (error) {
             toast.error(error?.data?.message || error.error)
         }
@@ -135,6 +149,9 @@ const ProfileScreen = () => {
                                             <Button variant="light" className="btn-sm">Details</Button>
                                         </LinkContainer>
                                     </td>
+                                    {userInfo.isAdmin && (<td>
+                                        <FaTrash style={{ color: "red" }} onClick={() => onDeleteHandler(order._id)} variant="primary" />
+                                    </td>)}
                                 </tr>
                             ))}
                         </tbody>

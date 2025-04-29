@@ -135,13 +135,19 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @access   Privat/Admin
 const getUsers = asyncHandler(async (req, res) => {
     // const user = await User.findById(req.user._id)
-    const users = await User.find({})
+    const pageSize = 4;
+    const page = Number(req.query.pageNumber) || 1;
+    const count = await User.countDocuments()
+
+    const users = await User.find({}).skip(pageSize * (page - 1)).limit(pageSize)
+
     if (!users) {
         res.status(404)
         throw new Error("User not found")
     }
 
-    res.status(200).json([...users]);
+    // res.status(200).json([...users]);
+    res.status(200).json({ users, page, pages: Math.ceil(count / pageSize) });
 })
 // @desc     get user by ID
 // @route    GET /api/users/:id

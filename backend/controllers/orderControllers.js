@@ -108,9 +108,26 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @access   Private/Admin
 
 const getOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find({}).populate("user", "id name");
-    res.status(200).json(orders)
+    const pageSize = 10;
+    const page = Number(req.query.pageNumber) || 1;
+    const count = await Order.countDocuments();
+
+    const orders = await Order.find({}).populate("user", "id name").skip(pageSize * (page - 1)).limit(pageSize)
+    res.status(200).json({ orders, page, pages: Math.ceil(count / pageSize) })
 });
+
+const deleteOrder = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id)
+    if (!order) {
+        res.status(404)
+        throw new Error("Resource not found")
+    }
+    await Order.deleteOne({ _id: order._id })
+    res.status(200).json({ message: "Order removed" });
+})
+// @desc    Delete an order
+// @route    DELETE /api/orders/:id
+// @access   Private/Admin
 
 export {
     addOrderItems,
@@ -118,5 +135,6 @@ export {
     getOrderByID,
     updateOrderToPaid,
     updateOrderToDelivered,
-    getOrders
+    getOrders,
+    deleteOrder
 }
