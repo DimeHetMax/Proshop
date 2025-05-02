@@ -51,7 +51,7 @@ const PlaceOrderScreen = () => {
             const confirm = await confirmAdminOrder(userInfo.name, userInfo.isAdmin)
 
             if (!confirm) {
-                toast.error('Stop fucking around!')
+                toast.error('Stop wasting time!')
                 return
             }
 
