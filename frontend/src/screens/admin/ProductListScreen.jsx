@@ -3,6 +3,8 @@ import { Table, Button, Row, Col } from "react-bootstrap"
 import { FaEdit, FaTrash } from "react-icons/fa"
 import { toast } from "react-toastify"
 import { useParams } from "react-router-dom"
+import { confirmAlert } from 'react-confirm-alert';
+
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import Paginate from "../../components/Paginate"
@@ -18,7 +20,7 @@ const ProductListScreen = () => {
     const [deleteProduct, { isLoading: loadingDelete }] = useDeleteProductMutation();
 
     const createProductHandler = async () => {
-        console.log("Button Click");
+        // console.log("Button Click");
         if (window.confirm("are you sure you want to create a new product?")) {
             try {
                 await createProduct();
@@ -31,15 +33,38 @@ const ProductListScreen = () => {
     }
 
     const deleteHandler = async (id) => {
-        if (window.confirm("Are you sure?")) {
-            try {
-                await deleteProduct(id);
-                toast.success("Product Deleted")
-                refetch()
-            } catch (err) {
-                toast.error(err?.data?.message || err.error)
-            }
-        }
+        // if (window.confirm("Are you sure?")) {
+        //     try {
+        //         await deleteProduct(id);
+        //         toast.success("Product Deleted")
+        //         refetch()
+        //     } catch (err) {
+        //         toast.error(err?.data?.message || err.error)
+        //     }
+        // }
+        confirmAlert({
+            title: 'Confirm to delete',
+            message: `Are you sure you want to delete this product ${id}?`,
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: async () => {
+                        try {
+                            await deleteProduct(id).unwrap();
+                            toast.success(`Product ${id} deleted!`);
+                        } catch (err) {
+                            toast.error(err?.data?.message || err.error);
+                        }
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: () => {
+                        toast.info(`Cancelled deleting product ${id}`);
+                    }
+                }
+            ]
+        });
     }
 
     return (

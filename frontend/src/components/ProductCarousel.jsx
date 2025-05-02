@@ -7,7 +7,7 @@ import { useGetTopProductsQuery } from "../slices/productsApiSlice"
 
 const ProductCarousel = () => {
     const { data: products, isLoading, error } = useGetTopProductsQuery()
-    console.log("products in Carousel===>", products);
+    // console.log("products in Carousel===>", products);
     return isLoading ?
         (
             <Loader />
@@ -18,21 +18,23 @@ const ProductCarousel = () => {
                     {error?.data?.message || error?.error}
                 </Message>)
             : (
-                <Container fluid="md" >
-                    <Carousel pause="false" fade className="bg-primary mb-4">
-                        {products.map(product => (
-                            <Carousel.Item key={product._id}>
-                                <Link to={`/product/${product._id}`}>
-                                    <Image src={product.image} alt={product.name} fluid />
-                                    <Carousel.Caption className="carousel-caption">
-                                        <h2>
-                                            {product.name} {product.price}
-                                        </h2>
-                                    </Carousel.Caption>
-                                </Link>
-                            </Carousel.Item>
-                        ))}
-                    </Carousel>
+                <Container fluid="md" className="mb-4">
+                    <div className="carousel-wrapper">
+                        <Carousel pause="false" fade className="bg-primary mb-4">
+                            {products.map(product => (
+                                <Carousel.Item key={product._id}>
+                                    <Link to={`/product/${product._id}`}>
+                                        <Image src={product.image} alt={product.name} fluid className="carousel-image" />
+                                        <Carousel.Caption className="carousel-caption carousel-caption-custom">
+                                            <h2>
+                                                {product.name} {product.price}
+                                            </h2>
+                                        </Carousel.Caption>
+                                    </Link>
+                                </Carousel.Item>
+                            ))}
+                        </Carousel>
+                    </div>
                 </Container>
             )
 }

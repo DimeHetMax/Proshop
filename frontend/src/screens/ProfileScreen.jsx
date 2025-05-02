@@ -4,6 +4,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { FaTimes, FaTrash } from "react-icons/fa";
+import { confirmAlert } from 'react-confirm-alert';
 
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -44,23 +45,36 @@ const ProfileScreen = () => {
         try {
             const res = await updateProfile({ _id: userInfo._id, name, email, password }).unwrap()
             dispatch(setCredentials(res))
+            refetch()
             toast.success("User Updated")
         } catch (error) {
             toast.error(error?.data?.message || error.error)
         }
     }
     const onDeleteHandler = async (id) => {
-        if (!window.confirm("Are you sure you want to delete it?")) {
-            return
-        }
-        try {
-            await deleteOrder(id).unwrap()
-
-            toast.success(`${id} was deleted`)
-            refetch()
-        } catch (error) {
-            toast.error(error?.data?.message || error.error)
-        }
+        confirmAlert({
+            title: 'Confirm to delete',
+            message: `Are you sure you want to delete order ${id}?`,
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: async () => {
+                        try {
+                            await deleteOrder(id).unwrap();
+                            toast.success(`User ${id} deleted!`);
+                        } catch (err) {
+                            toast.error(err?.data?.message || err.error);
+                        }
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: () => {
+                        toast.info(`Cancelled deleting order ${id}`);
+                    }
+                }
+            ]
+        });
     }
     return (
         <Row>
@@ -125,7 +139,7 @@ const ProfileScreen = () => {
                         {error?.data?.message || error.error}
                     </Message>
                 ) : (
-                    <Table striped hover responsive className="table-sm">
+                    <Table striped hover responsive className="table-sm" size="sm">
                         <thead>
                             <tr>
                                 <th>ID</th>

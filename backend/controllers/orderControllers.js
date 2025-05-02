@@ -116,6 +116,12 @@ const getOrders = asyncHandler(async (req, res) => {
     res.status(200).json({ orders, page, pages: Math.ceil(count / pageSize) })
 });
 
+const getAllOrders = asyncHandler(async (req, res) => {
+    const orders = await Order.find({}).populate("user", "id name")
+
+    res.status(200).json(orders)
+})
+
 const deleteOrder = asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id)
     if (!order) {
@@ -136,5 +142,6 @@ export {
     updateOrderToPaid,
     updateOrderToDelivered,
     getOrders,
+    getAllOrders,
     deleteOrder
 }

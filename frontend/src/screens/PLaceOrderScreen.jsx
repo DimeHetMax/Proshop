@@ -5,6 +5,8 @@ import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import CheckoutSteps from "../components/CheckoutSteps";
 import FormContainer from "../components/FormContainer";
 import { toast } from "react-toastify";
+import { confirmAlert } from 'react-confirm-alert';
+
 import Message from "../components/Message"
 import Loader from "../components/Loader"
 import { useCreateOrderMutation } from "../slices/ordersApiSlice";
@@ -15,7 +17,6 @@ const PlaceOrderScreen = () => {
     const navigate = useNavigate();
     const cart = useSelector(state => state.cart)
     const { userInfo } = useSelector(state => state.auth)
-    console.log("userInfo in PlaceOrderScreen ===>", userInfo);
 
     const [createOrder, { isLoading, error }] = useCreateOrderMutation()
 
@@ -27,14 +28,36 @@ const PlaceOrderScreen = () => {
         }
     }, [cart.paymentMathod, cart.shippingAddress.address, navigate])
 
-
+    const confirmAdminOrder = (name, isAdmin) => {
+        return new Promise((resolve) => {
+            confirmAlert({
+                title: 'Admin Action Required',
+                message: `${name.toUpperCase()}: Are you sure you want to place an order?\nYou are isAdmin: ${isAdmin}`,
+                buttons: [
+                    {
+                        label: 'Yes',
+                        onClick: () => resolve(true)
+                    },
+                    {
+                        label: 'No',
+                        onClick: () => resolve(false)
+                    }
+                ]
+            });
+        })
+    }
     const placeOrderHandler = async () => {
         if (userInfo.isAdmin) {
-            window.alert(`${userInfo.name.toUpperCase()}: Are you sure you wanna place an order? You are isAdmin: ${userInfo.isAdmin}!`)
-            if (!window.confirm("Please confirm!")) {
-                return window.alert("Stop fucking around!")
+            const confirm = await confirmAdminOrder(userInfo.name, userInfo.isAdmin)
+
+            if (!confirm) {
+                toast.error('Stop fucking around!')
+                return
             }
+
+            toast.success('Your order was placed!')
         }
+
         try {
             const res = await createOrder({
                 orderItems: cart.cartItems,
@@ -82,16 +105,16 @@ const PlaceOrderScreen = () => {
                                         {cart.cartItems.map((item, index) => (
                                             <ListGroup.Item key={index}>
                                                 <Row >
-                                                    <Col md={1}>
+                                                    <Col xs={4} md={3} lg>
                                                         <Image src={item.image} alt={item.name} width={"100px"} />
                                                     </Col>
-                                                    <Col>
-                                                        <Link to={`/products/${item.product}`}>
+                                                    <Col xs={5} md lg>
+                                                        <Link to={`/product/${item._id}`}>
                                                             {item.name}
                                                         </Link>
                                                     </Col>
-                                                    <Col md={4}>
-                                                        {item.qty} X ${item.price} = ${item.qty * item.price}
+                                                    <Col xs md lg>
+                                                        {item.qty}X${item.price}=${item.qty * item.price}
                                                     </Col>
                                                 </Row>
                                             </ListGroup.Item>

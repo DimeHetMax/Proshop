@@ -38,11 +38,18 @@ export const ordersApiSLice = apiSlice.injectEndpoints({
             providesTags: ["Orders"]
         }),
         getOrders: builder.query({
-            query: ({ pageNumber }) => ({
+            query: ({ pageNumber } = {}) => ({
                 url: ORDERS_URL,
                 params: {
                     pageNumber
                 }
+            }),
+            keepUnusedDataFor: 5,
+            providesTags: ["Orders"]
+        }),
+        getAllOrders: builder.query({
+            query: () => ({
+                url: `${ORDERS_URL}/all`
             }),
             keepUnusedDataFor: 5,
             providesTags: ["Orders"]
@@ -73,6 +80,7 @@ export const {
     useGetPayPalClintIdQuery,
     useGetMyOrdersQuery,
     useGetOrdersQuery,
+    useGetAllOrdersQuery,
     useDeliverOrderMutation,
     useDeleteOrderMutation
 } = ordersApiSLice;

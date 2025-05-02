@@ -1,6 +1,7 @@
 import { LinkContainer } from "react-router-bootstrap"
 import { Table, Button } from "react-bootstrap"
 import { FaTrash, FaEdit, FaCheck } from "react-icons/fa"
+import { confirmAlert } from 'react-confirm-alert';
 import { toast } from "react-toastify"
 import { useParams } from "react-router-dom"
 
@@ -16,14 +17,29 @@ const UserListScreen = () => {
     const [deleteUser, { isLoading: loadingDelete }] = useDeleteUserMutation()
 
     const deleteHandler = async (id) => {
-        if (window.confirm("Are you sure?")) {
-            try {
-                await deleteUser(id)
-                toast.success("User deleted")
-            } catch (err) {
-                toast.error(err?.data?.message || err.error)
-            }
-        }
+        confirmAlert({
+            title: 'Confirm to delete',
+            message: `Are you sure you want to delete user ${id}?`,
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: async () => {
+                        try {
+                            await deleteUser(id).unwrap();
+                            toast.success(`User ${id} deleted!`);
+                        } catch (err) {
+                            toast.error(err?.data?.message || err.error);
+                        }
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: () => {
+                        toast.info(`Cancelled deleting user ${id}`);
+                    }
+                }
+            ]
+        });
     }
     return (
         <div>

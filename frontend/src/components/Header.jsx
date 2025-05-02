@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 
 import SearchBox from "./SearchBox";
 
-import { useGetOrdersQuery } from "../slices/ordersApiSlice"
+import { useGetAllOrdersQuery } from "../slices/ordersApiSlice"
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logout } from "../slices/authSlice";
 import logo from "../assets/logo.png"
@@ -16,9 +16,11 @@ const Header = () => {
     const { cartItems } = useSelector((state) => state.cart)
     const { userInfo } = useSelector((state) => state.auth)
 
-    const { data: orders, isLoading } = useGetOrdersQuery()
+    const { data: orders, isLoading } = useGetAllOrdersQuery(undefined, {
+        skip: !userInfo?.isAdmin
+    })
     const [pendingDeliveries, setPendingDeliveries] = useState(0);
-    // console.log(pendingDeliveries);
+
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
@@ -35,7 +37,8 @@ const Header = () => {
     }
 
     useEffect(() => {
-        if (orders) {
+        // console.log('orders in header:', data.orders);
+        if (orders && Array.isArray(orders)) {
             const filteredOrders = orders.filter(order => order.isPaid && !order.isDelivered);
             setPendingDeliveries(filteredOrders.length);
         }

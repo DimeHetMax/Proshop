@@ -109,7 +109,25 @@ const OrderScreen = () => {
             <Message variant='danger' />
         ) : (
             <div>
-                <h1>Order {order._id}</h1>
+                {userInfo.isAdmin ? (
+                    <Link to="/admin/orderlist" className="btn btn-light my-3">
+                        Go Back
+                    </Link>
+                ) : (
+                    <Link to="/profile" className="btn btn-light my-3">
+                        Go Back
+                    </Link>
+                )}
+                <Row xs md lg>
+                    <Col xs={12} md={10} lg={8} >
+                        <h1 className="order-title">Order</h1>
+                    </Col>
+                    <Col xs={12} md={10} lg={8}>
+                        <p className="order-text-id">id: {order._id}</p>
+                    </Col>
+                </Row>
+
+
                 <Row>
                     <Col md={8}>
                         <ListGroup variant="flush">
