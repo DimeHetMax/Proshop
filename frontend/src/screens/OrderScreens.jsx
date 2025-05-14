@@ -64,7 +64,7 @@ const OrderScreen = () => {
         return actions.order.capture().then(async function (details) {
 
             try {
-                await payOrder({ orderId, details })
+                await payOrder({ orderId, details }).unwrap()
                 refetch()
                 toast.success("Payment successful")
             } catch (error) {
@@ -106,7 +106,7 @@ const OrderScreen = () => {
         isLoading ? (
             <Loader />
         ) : error ? (
-            <Message variant='danger' />
+            <Message variant='danger'>{error?.data?.message || error.error}</Message>
         ) : (
             <div>
                 {userInfo.isAdmin ? (
