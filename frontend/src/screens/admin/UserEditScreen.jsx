@@ -44,11 +44,12 @@ const UserEditScreen = () => {
 
 
     return (
-        <div>
+        <div className="admin-edit-page">
             <Link to="/admin/userlist" className="btn btn-light my-3">
                 Go Back
             </Link>
             <FormContainer>
+                <span className="admin-eyebrow">Access management</span>
                 <h1>Edit User</h1>
                 {loadingUpdate && <Loader />}
                 {isLoading ? <Loader /> : error ? <Message variant="danger">{error}</Message> : (

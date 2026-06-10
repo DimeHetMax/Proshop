@@ -76,11 +76,12 @@ const ProductEditScreen = () => {
         }
     }
     return (
-        <div>
+        <div className="admin-edit-page">
             <Link to="/admin/productlist" className="btn btn-light my-3">
                 Go Back
             </Link>
             <FormContainer>
+                <span className="admin-eyebrow">Catalog management</span>
                 <h1>Edit Product</h1>
                 {loadingUpdate && <Loader />}
                 {isLoading ? <Loader /> : error ? <Message variant="danger">{error.data.message}</Message> : (

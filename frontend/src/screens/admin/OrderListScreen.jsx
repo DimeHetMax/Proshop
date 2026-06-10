@@ -45,15 +45,18 @@ const OrderListScreen = () => {
         });
     }
     return (
-        <div>
+        <div className="admin-page">
 
-            <h1>Orders</h1>
+            <div className="admin-page-header">
+                <span className="admin-eyebrow">Fulfillment overview</span>
+                <h1>Orders</h1>
+            </div>
             {isLoading ?
                 <Loader />
                 : error ?
                     <Message variant="danger">{error}</Message> : (
                         <div>
-                            <Table striped hover responsive className="table-sm">
+                            <Table responsive className="admin-table">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -73,14 +76,14 @@ const OrderListScreen = () => {
                                             <td>{order.user && order.user.name}</td>
                                             <td>{order.createdAt.substring(0, 10)}</td>
                                             <td>{order.totalPrice}</td>
-                                            <td>{order.isPaid ? (order.paidAt.substring(0, 10)) : (<FaTimes color="red" />)}</td>
-                                            <td>{order.isDelivered ? (order.deliveredAt.substring(0, 10)) : (<FaTimes color="red" />)}</td>
+                                            <td>{order.isPaid ? (<span className="admin-status admin-status-success">{order.paidAt.substring(0, 10)}</span>) : (<span className="admin-status admin-status-pending"><FaTimes /> Pending</span>)}</td>
+                                            <td>{order.isDelivered ? (<span className="admin-status admin-status-success">{order.deliveredAt.substring(0, 10)}</span>) : (<span className="admin-status admin-status-pending"><FaTimes /> Pending</span>)}</td>
                                             <td>
                                                 <LinkContainer to={`/order/${order._id}`}>
-                                                    <Button variant="light" className="btn-sm">Details</Button>
+                                                    <Button variant="light" className="admin-details-button">Details</Button>
                                                 </LinkContainer>
                                             </td>
-                                            <td>{order.isPaid && order.isDelivered && (<Button variant="light" className="btn-sm" onClick={() => deleteHandler(order._id)}><FaTrash color="red" /></Button>)}</td>
+                                            <td>{order.isPaid && order.isDelivered && (<Button variant="light" className="admin-action-button admin-action-danger" aria-label={`Delete order ${order._id}`} onClick={() => deleteHandler(order._id)}><FaTrash /></Button>)}</td>
                                         </tr>
                                     ))}
                                 </tbody>

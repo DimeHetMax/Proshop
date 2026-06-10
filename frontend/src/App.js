@@ -9,7 +9,7 @@ const App = () => {
   return (
     <div>
       <Header />
-      <main className='py-3'>
+      <main className='app-main py-3'>
         <Container>
           <Outlet />
         </Container>

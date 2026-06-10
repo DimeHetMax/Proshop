@@ -3,6 +3,8 @@
 //         if (age >= 18) {
 //             resolve(`${age} - доступ есть`)
 
+import { response } from "express"
+
 //         } else {
 //             reject(`${age} -- мало лет`)
 
@@ -47,27 +49,60 @@
 // }
 // res()
 
-const getUser = (userId) => {
-    return new Promise((resolve, reject) => {
-        if (userId !== 0) {
-            setTimeout(() => {
-                resolve({ id: userId, name: "User #userId" })
-            }, 1000)
-        } else {
-            reject("Неверный ID")
-        }
-    }
+// const newURL = "fakeURL"
 
-    )
-}
-getUser(1).then(console.log).catch(console.log)
 
-const result = async () => {
-    try {
-        const res = await getUser(4)
-        console.log(res);
-    } catch (error) {
-        console.log(error);
-    }
-}
-result()
+// const fetchAPI = (url, header) => {
+//     const { headers } = header
+//     return new Promise((resolve, reject) => {
+//         if (url && header) {
+//             setTimeout(() => resolve(`We fetch this token:${url} with:${headers.Authorization}`,), 2000)
+//         } else {
+//             reject(console.log("ERROR"))
+//         }
+//     })
+// }
+// const getPayPalAccessToken = async () => {
+//     const auth = Buffer.from("PAPAL_CLIENT_ID" + ":" + "PAYPAL_API_SECRET").toString("base64")
+//     const url = `${newURL}/v1/oauth2/token`;
+//     const headers = {
+//         Accept: "application/json",
+//         "Accept-Language": "en_US",
+//         Authorization: `Basic ${auth}`
+//     }
+//     const body = "grant_type=client_credentials";
+//     try {
+//         const response = await fetchAPI(url, {
+//             method: "POST",
+//             headers,
+//             body
+//         })
+//         if (!response) {
+//             console.log("ERROR RESPONSE");
+//         }
+//         return response;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+
+// const verifyPayPalPayment = async () => {
+//     try {
+//         const accesstToken = await getPayPalAccessToken()
+//         console.log("accesstToken  ===>", accesstToken);
+
+//     } catch (error) {
+
+//     }
+
+// }
+
+// verifyPayPalPayment()
+// import https from "https";
+
+// https.get("https://api.telegram.org", (res) => {
+//     console.log("Status Code:", res.statusCode);
+// }).on("error", (e) => {
+//     console.error("HTTPS error:", e);
+// });

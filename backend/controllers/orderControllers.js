@@ -4,6 +4,7 @@ import Order from '../models/orderModel.js';
 import Product from "../models/productModel.js"
 import { calcPrices } from '../utils/calcPrices.js';
 import { verifyPayPalPayment, checkIfNewTransaction } from '../utils/paypal.js';
+import { sendTelegramMessage } from "../utils/telegram.js"
 
 // @desc    Create new order
 // @route    POST /api/orders
@@ -140,13 +141,24 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
             email_address: req.body.payer.email_address
         }
         const updatedOrder = await order.save();
+        await sendTelegramMessage({
+            id: order._id,
+            totalPrice: order.totalPrice,
+            name: req.user.name,
+            email: req.user.email,
+            street: order.shippingAddress.address,
+            city: order.shippingAddress.city,
+            postalCode: order.shippingAddress.postalCode,
+            country: order.shippingAddress.country,
 
+        })
         res.status(200).json(updatedOrder)
     } else {
         res.status(404)
         throw new Error("Order not found")
     }
 });
+
 // @desc    Update order to delivered
 // @route    PUT /api/orders/:id/deliver
 // @access   Private/Admin

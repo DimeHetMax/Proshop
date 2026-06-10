@@ -46,9 +46,9 @@ const Header = () => {
         }
     }, [orders])
     return (
-        <header>
+        <header className="site-header">
             <Container>
-                <Navbar bg="dark" data-bs-theme="dark" vatiant="gray" expand="md" collapseOnSelect>
+                <Navbar expand="md" collapseOnSelect>
                     <Container>
                         <LinkContainer to="/">
                             <Navbar.Brand >

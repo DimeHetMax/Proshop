@@ -34,10 +34,10 @@ const CartScreen = () => {
                             Your cart is empty <Link to="/">Go back</Link>
                         </Message>
                     ) : (
-                        <ListGroup variant="flush">
+                        <ListGroup variant="flush" className="cart-list">
                             {cartItems.map((item) => (
                                 <ListGroup.Item key={item._id}>
-                                    <Row>
+                                    <Row className="cart-row">
                                         <Col md={2}>
                                             <Image src={item.image} fluid rounded />
                                         </Col>
@@ -72,7 +72,7 @@ const CartScreen = () => {
                     )}
                 </Col>
                 <Col md={4}>
-                    <Card>
+                    <Card className="cart-summary">
                         <ListGroup variant="flush">
                             <ListGroup.Item>
                                 <h2>

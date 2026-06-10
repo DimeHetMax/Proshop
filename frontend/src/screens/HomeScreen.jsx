@@ -39,9 +39,9 @@ const HomeScreen = () => {
                 ) : (
                     <div>
 
-                        <h1>Latest Products</h1>
+                        <h1 className="section-heading">Latest Products</h1>
 
-                        <Row className="mb-3" xs={1} md={4} lg={5}>
+                        <Row className="filter-bar" xs={1} md={4} lg={5}>
                             <Col><FilterCategory category={category} /></Col>
                             <Col><FilterBrand brand={brand} /></Col>
                             <Col><FilterPrice minPrice={minPrice} maxPrice={maxPrice} /></Col>

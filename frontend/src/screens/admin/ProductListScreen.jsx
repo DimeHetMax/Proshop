@@ -68,13 +68,14 @@ const ProductListScreen = () => {
     }
 
     return (
-        <div>
-            <Row className="align-items-center">
+        <div className="admin-page">
+            <Row className="admin-page-header align-items-center">
                 <Col>
+                    <span className="admin-eyebrow">Catalog management</span>
                     <h1>Products</h1>
                 </Col>
-                <Col>
-                    <Button className="my-3 btn-sm" onClick={createProductHandler}>
+                <Col className="text-end">
+                    <Button className="admin-create-button" onClick={createProductHandler}>
                         <FaEdit /> Create Product
                     </Button>
                 </Col>
@@ -83,7 +84,7 @@ const ProductListScreen = () => {
             {loadingDelete && <Loader />}
             {isLoading ? <Loader /> : error ? <Message variant="danger">{error.data.message}</Message> : (
                 <div>
-                    <Table striped hover responsive className="table-sm">
+                    <Table responsive className="admin-table">
                         <thead>
                             <tr>
                                 <td>ID</td>
@@ -104,11 +105,11 @@ const ProductListScreen = () => {
                                     <td>{product.brand}</td>
                                     <td>
                                         <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                                            <Button variant="light" className="btn-sm mx-2" >
+                                            <Button variant="light" className="admin-action-button" aria-label={`Edit ${product.name}`}>
                                                 <FaEdit />
                                             </Button>
                                         </LinkContainer>
-                                        <Button variant="danger" className="btn-sm" onClick={() => deleteHandler(product._id)}>
+                                        <Button variant="danger" className="admin-action-button admin-action-danger" aria-label={`Delete ${product.name}`} onClick={() => deleteHandler(product._id)}>
                                             <FaTrash style={{ color: "white" }} />
                                         </Button>
                                     </td>
